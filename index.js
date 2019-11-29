@@ -4,7 +4,7 @@ require('dotenv').config();
 const port = 3001;
 const apiRoutes = require('./routes');
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to star wars api!' });

@@ -18,17 +18,21 @@ module.exports = {
         }
     },
 
-    fetchCharacters: async episode_id => {
+    fetchCharacters: async movie_id => {
         let characters = [];
         let total_height = 0;
 
         try {
-            const data = await request.get(`films/${episode_id}`);
+            const data = await request.get(`films/${movie_id}`);
 
-            for (const character_url of data.characters) {
-                let id = character_url.substr(-2, 1);
-                let character_data = await request.get(`people/${id}`);
+            // fetch characters' data from movie data
+            const xters = await Promise.all(data.characters.map(character_url => {
+                let id = character_url.split('/')[5];
+                let character_data = request.get(`people/${id}`);
+                return character_data;
+            }));
 
+            xters.forEach(character_data => {
                 characters.push({
                     name: character_data.name,
                     birth_year: character_data.birth_year,
@@ -38,11 +42,17 @@ module.exports = {
                     height: character_data.height
                 });
 
-                total_height += character_data.height;
-            }
-            characters.total_height = total_height;
+                total_height += parseInt(character_data.height);
+            });
 
-            return await characters;
+            characters.total_height_cm = total_height;
+
+            // divide cm by 30.48 to get feet
+            const feet = total_height / 30.48;
+            console.log(feet)
+            characters.total_height_feet_inches = `${parseInt(feet)}ft ${Number(feet)}`;
+            characters.count = data.characters.length;
+            return characters;
         } catch (err) {
             throw err;
         }
