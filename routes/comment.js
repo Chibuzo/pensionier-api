@@ -1,24 +1,21 @@
 const routes = require('express').Router();
-const comment = require('../models/comment');
+const commentService = require('../services/commentService');
 
+// get movie comments
 routes.get('/', (req, res) => {
-    res.status(200).json({ message: 'comment!' });
+    const movie_id = req.query.movie_id;
+    commentService.fetchMovieComments(movie_id).then(comments => {
+        res.status(200).json({ comments });
+    }).catch(err => {
+        res.status(500).json({ error: "Server error", message: err });
+    });
 });
 
 routes.post('/', (req, res) => {
-    const comment_text = req.body.comment;
-
-    const comment_data = {
-        movie_id: req.body.movie_id,
-        comment: comment_text.length > 500 ? comment_text.substr(0, 499) : comment_text,
-        public_ip: req.connection.remoteAddress,
-        createdAt: new Date().toUTCString()
-    }
-
-    comment.createNew(comment_data).then(comment => {
+    commentService.postComment(req.body, req.connection.remoteAddress).then(comment => {
         res.status(201).json({ comment_id: comment.id });
     }).catch(error => {
-        res.status(400).json({ error });
+        res.status(500).json({ error });
     });
 });
 
