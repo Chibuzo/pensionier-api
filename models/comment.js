@@ -25,14 +25,14 @@ module.exports = {
         });
     },
 
-    // findOne: id => {
-    //     return new Promise((resolve, reject) => {
-    //         db.query("SELECT * from comments where id = ?", [id], (err, result) => {
-    //             if (err) {
-    //                 return reject(err);
-    //             }
-    //             return resolve(result[0]);
-    //         });
-    //     });
-    // }
+    getMovieCommentCounts: () => {
+        return new Promise((resolve, reject) => {
+            db.query("SELECT COUNT(*) AS comment_count, movie_id from comments GROUP BY movie_id", (err, comments) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(comments);
+            });
+        });
+    }
 }

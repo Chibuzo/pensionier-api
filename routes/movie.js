@@ -4,7 +4,7 @@ const movie = require('../services/movieService');
 routes.get('/', (req, res) => {
     movie.fetchAll().then(movies => {
         res.status(200).json({ movies });
-    }).catch(err => {
+    }).catch(error => {
         res.status(400).json({ error });
     });
 });

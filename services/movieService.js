@@ -1,17 +1,36 @@
 const request = require('../Helpers/APIRequest')(process.env.STARWARS_API_URL);
-const comment = require('../models/comment');
+const commentModel = require('../models/comment');
 
 module.exports = {
     fetchAll: async () => {
         try {
             const data = await request.get('films');
+
+            // sort by release date
+            data.results.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+
+            // get movie comment counts
+            let comments = [];
+            try {
+                comments = await commentModel.getMovieCommentCounts();
+            } catch (err) {
+                // this isn't sooo bad so we'll continue...
+                console.log(err);
+            }
+
             const movies = data.results.map(film => {
+                let movie_id = film.url.split('/')[5];
+
+                let count = comments.find(comment => comment.movie_id == movie_id);
+
                 return {
                     title: film.title,
                     opening_crawl: film.opening_crawl,
-                    comment_count: 0
+                    comment_count: count ? count.comment_count : 0,
+                    //release_date: film.release_date,
                 }
             });
+
             return await movies;
         } catch (err) {
             throw err;
