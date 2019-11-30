@@ -15,8 +15,6 @@ const APIRequest = api_url => {
             const response = await axios.get(api_url + url, option);
             return await response.data;
         } catch (err) {
-            //console.log(err)
-            console.log('fetch error')
             throw "Couldn't fetch data that this time, please try again later";
         }
     }

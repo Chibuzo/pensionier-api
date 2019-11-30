@@ -11,6 +11,7 @@ routes.get('/', (req, res) => {
     });
 });
 
+// post comment
 routes.post('/', (req, res) => {
     commentService.postComment(req.body, req.connection.remoteAddress).then(comment => {
         res.status(201).json({ comment_id: comment.id });
