@@ -89,15 +89,9 @@ module.exports = {
 Array.prototype.customSort = function (sort_field, order) {
     this.sort((a, b) => {
         if (sort_field == 'height') {
-            if (order == 'asc') {
-                return a[sort_field] - b[sort_field];
-            }
-            return b[sort_field] - a[sort_field];
+            return order == 'asc' ? a[sort_field] - b[sort_field] : b[sort_field] - a[sort_field];
         } else {
-            if (order == 'asc') {
-                return a[sort_field].localeCompare(b[sort_field]);
-            }
-            return b[sort_field].localeCompare(a[sort_field]);
+            return order == 'asc' ? a[sort_field].localeCompare(b[sort_field]) : b[sort_field].localeCompare(a[sort_field]);
         }
     });
 }
