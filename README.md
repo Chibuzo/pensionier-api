@@ -73,7 +73,17 @@ OR
   
 * **URL Param**
 
-  ?movie_id `<int>`  *Required*
+  * **Required**
+ 
+    `movie_id=[int]`
+  
+  * **Optional**
+  
+    `gender=[female|male]`
+  
+    `sort=[name|gender|height]`
+  
+    `order=[asc|desc]`
   
 * **Success Response**
 
@@ -136,8 +146,132 @@ OR
 }
 ```
 
-  
 
+## Post comment
+
+Post anonymous comment for a movie. Comment must not be more than 500 characters.
+
+* **Endpoint:**
+
+  `POST` /comments
+  
+* **Header:**  
+
+  Header: Content-Type: application/json
+  
+* **Data Parameters**
+
+All data parameters are required.
+
+`comment=[text]`
+
+`movie_id=[int]`
+  
+* **Success Response**
+
+  **Status Code:** 201
+  
+  **Data:**
+```
+  {
+    "status": "success",
+    "comment_id": "1"
+  }    
+```
+
+* **Error Response**
+
+  **Status Code:** 400
+  
+  **Data:**
+```
+{
+  "status": "error",
+  "message": "Acceptable content-type header is missing"
+}
+```
+OR
+
+ **Status Code:** 400
+  
+  **Data:**
+```
+{
+  "status": "error",
+  "message": "One or more of the required data parameters are missing"
+}
+```
+OR
+
+  **Status Code:** 500
+  
+  **Data:**
+  
+```
+{
+  "status": "error",
+  "message": "Server error! Unable to fetch movies at this time. Please try again later"
+}
+```
+  
+  
+## Fetch movie comments  
+
+* **Endpoint:**
+
+  `GET` /comments
+  
+* **Header:**  
+
+  Header: Content-Type: application/json
+  
+* **URL parameter*8
+
+  * **Required**
+  
+    `movie_id=[int]`
+  
+* **Success Response**
+
+  **Status Code:** 200
+  
+  **Data:**
+```
+  {
+    "status": "success",
+    "comments": [
+        {
+            "comment": "This is a comment about this movie",
+            "public_ip": "3.2.34.344"
+        },
+     ...
+    ]
+}    
+```
+
+* **Error Response**
+
+  **Status Code:** 400
+  
+  **Data:**
+```
+{
+  "status": "error",
+  "message": "Acceptable content-type header is missing"
+}
+```
+OR
+
+  **Status Code:** 500
+  
+  **Data:**
+  
+```
+{
+  "status": "error",
+  "message": "Server error! Unable to fetch movies at this time. Please try again later"
+}
+```
 
 
 
