@@ -49,9 +49,9 @@ No URL or data parameters
 ```
 OR
 
-  **Status Code:** 500
+   **Status Code:** 500
   
-  **Data:**
+   **Data:**
   
 ```
 {
@@ -123,9 +123,9 @@ OR
 ```
 OR
 
-  **Status Code:** 400
+   **Status Code:** 400
   
-  **Data:**
+   **Data:**
   
 ```
 {
@@ -135,9 +135,9 @@ OR
 ```
 OR
 
-  **Status Code:** 500
+   **Status Code:** 500
   
-  **Data:**
+   **Data:**
   
 ```
 {
@@ -161,11 +161,11 @@ Post anonymous comment for a movie. Comment must not be more than 500 characters
   
 * **Data Parameters**
 
-All data parameters are required.
+  All data parameters are required.
 
-`comment=[text]`
+  `comment=[text]`
 
-`movie_id=[int]`
+  `movie_id=[int]`
   
 * **Success Response**
 
@@ -192,9 +192,9 @@ All data parameters are required.
 ```
 OR
 
- **Status Code:** 400
+   **Status Code:** 400
   
-  **Data:**
+   **Data:**
 ```
 {
   "status": "error",
@@ -203,9 +203,9 @@ OR
 ```
 OR
 
-  **Status Code:** 500
+   **Status Code:** 500
   
-  **Data:**
+   **Data:**
   
 ```
 {
@@ -225,7 +225,7 @@ OR
 
   Header: Content-Type: application/json
   
-* **URL parameter*8
+* **URL parameter**
 
   * **Required**
   
@@ -262,9 +262,9 @@ OR
 ```
 OR
 
-  **Status Code:** 500
+   **Status Code:** 500
   
-  **Data:**
+   **Data:**
   
 ```
 {
