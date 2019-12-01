@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const port = 3001;
 const apiRoutes = require('./routes');
+const header_validation = require('./middlewares/header_validator');
 
 app.use(express.json());
 
@@ -10,7 +11,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to star wars api!' });
 });
 
-app.use('/api', apiRoutes);
+app.use('/api', header_validation, apiRoutes);
 
 app.set('port', process.env.PORT || port);
 

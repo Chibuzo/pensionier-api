@@ -30,7 +30,7 @@ module.exports = {
                     opening_crawl: film.opening_crawl,
                     comment_count: count ? count.comment_count : 0,
                     //release_date: film.release_date,
-                }
+                };
             });
 
             return await movies;
@@ -39,7 +39,7 @@ module.exports = {
         }
     },
 
-    fetchCharacters: async (movie_id, sort, gender) => {
+    fetchCharacters: async (movie_id, sort, sort_order = 'desc', gender) => {
         let characters = [];
         let total_height = 0;
 
@@ -70,14 +70,10 @@ module.exports = {
             }
 
             // apply sort (default desc)
-            sort.field && characters.customSort(sort.field, sort.order);
+            sort && characters.customSort(sort, sort_order);
 
             characters.total_height_cm = total_height;
-
-            // divide cm by 30.48 to get feet
-            const feet = total_height / 30.48;
-            //console.log(feet)
-            characters.total_height_feet_inches = `${parseInt(feet)}ft ${Number(feet)}`;
+            characters.total_height_feet_inches = cmToFeetInches(total_height);
             characters.count = characters.length;
             return characters;
         } catch (err) {
@@ -94,4 +90,14 @@ Array.prototype.customSort = function (sort_field, order) {
             return order == 'asc' ? a[sort_field].localeCompare(b[sort_field]) : b[sort_field].localeCompare(a[sort_field]);
         }
     });
+}
+
+function cmToFeetInches(len) {
+    const ft_const = 30.48; // quantity of cm in 1 feet
+    const inch_const = 2.54   // quantity of cm in 1 inch
+    const feet = len / ft_const;
+    const len_ft = Math.floor(feet);
+    const decimal = `0.` + feet.toString().split('.')[1];
+    const len_inches = ((parseFloat(decimal) / inch_const) * ft_const).toFixed(2);
+    return `${len_ft}ft ${len_inches}in`;
 }
