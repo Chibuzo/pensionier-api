@@ -4,21 +4,19 @@ const { commentValidationRules, validate, fetchMovieRules } = require('../middle
 
 // get movie comments
 routes.get('/', fetchMovieRules(), validate, (req, res) => {
-    const movie_id = req.query.movie_id;
-
-    commentService.fetchMovieComments(movie_id).then(comments => {
+    commentService.fetchMovieComments(req.query.movie_id).then(comments => {
         res.status(200).json({ status: 'success', comments });
-    }).catch(err => {
-        res.status(500).json({ error: "error", message: err });
+    }).catch(error => {
+        res.status(error.statusCode).json({ error: "error", message: error.message });
     });
 });
 
 // post comment
 routes.post('/', commentValidationRules(), validate, (req, res) => {
-    commentService.postComment(req.body, req.connection.remoteAddress).then(comment => {
+    commentService.postComment(req.body.comment, req.body.movie_id, req.connection.remoteAddress).then(comment => {
         res.status(201).json({ status: 'success', comment_id: comment.id });
     }).catch(error => {
-        res.status(500).json({ error });
+        res.status(500).json({ status: 'error', error });
     });
 });
 

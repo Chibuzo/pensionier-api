@@ -5,7 +5,7 @@ const characters = require('./character');
 const comments = require('./comment');
 
 routes.get('/', (req, res) => {
-    res.status(200).json({ message: 'What the fuck are expecting to get here??!!' });
+    res.status(200).json({ message: 'What are you looking for here??!!' });
 });
 
 routes.use('/movies', movies);
