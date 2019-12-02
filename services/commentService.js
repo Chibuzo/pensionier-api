@@ -1,12 +1,17 @@
 const commentModel = require('../models/comment');
 
 module.exports = {
-    postComment: async (comment_data, public_ip) => {
-        const comment_text = comment_data.comment;
-
+    /**
+     * Post anonymous comments for a movie
+     * @param {String} comment
+     * @param {Integer} movie_id
+     * @param {String} public_ip
+     * @returns {Promise} comment id
+     */
+    postComment: async (comment_text, movie_id, public_ip) => {
         const comment = {
-            movie_id: comment_data.movie_id,
-            comment: comment_text.length > 500 ? comment_text.substr(0, 499) : comment_text,
+            movie_id: movie_id,
+            comment: comment_text,
             public_ip: public_ip
         };
 
@@ -17,6 +22,11 @@ module.exports = {
         }
     },
 
+    /**
+     * Fetchs comments for a movie in reverse chronological order
+     * @param {Integer} movie_id
+     * @returns {Promise} Array of comments
+     */
     fetchMovieComments: async movie_id => {
         try {
             const raw_comments = await commentModel.getMovieComments(movie_id);

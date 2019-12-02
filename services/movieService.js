@@ -2,6 +2,10 @@ const request = require('../Helpers/APIRequest')(process.env.STARWARS_API_URL);
 const commentModel = require('../models/comment');
 
 module.exports = {
+    /**
+     * Fetch all Starwars movies along, including their comment count
+     * @returns {Promise} list of starwars movie
+     */
     fetchMovies: async () => {
         try {
             const films = await request.get('films');
@@ -39,6 +43,14 @@ module.exports = {
         }
     },
 
+    /**
+     * Fetch movie characters
+     * @param {Integer} movie_id
+     * @param {String} [sort]
+     * @param {String} [sort_order=desc]
+     * @param {String} [gender]
+     * @returns {Promise} list of movie characters
+     */
     fetchCharacters: async (movie_id, sort, sort_order = 'desc', gender) => {
         let characters = [];
         let total_height = 0;
@@ -66,13 +78,13 @@ module.exports = {
                     height: xters[i].height
                 });
 
-                total_height += parseInt(xters[i].height);
+                total_height += Number.isInteger(parseInt(xters[i].height)) ? parseInt(xters[i].height) : 0;
             }
 
             // apply sort (default desc)
             sort && characters.customSort(sort, sort_order);
 
-            characters.total_height_cm = total_height;
+            characters.total_height_cm = total_height + 'cm';
             characters.total_height_feet_inches = cmToFeetInches(total_height);
             characters.count = characters.length;
             return characters;

@@ -13,7 +13,7 @@ routes.get('/', fetchMovieRules(), validate, (req, res) => {
             characters
         });
     }).catch(error => {
-        res.status(400).json({ error });
+        res.status(error.statusCode).json({ status: 'error', message: error.message });
     });
 });
 

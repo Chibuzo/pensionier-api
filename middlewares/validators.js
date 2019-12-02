@@ -4,7 +4,7 @@ module.exports = {
     commentValidationRules: () => {
         return [
             body('movie_id').isNumeric().trim().withMessage("movie_id cannot be empty and must be a number"),
-            body('comment').isLength({ max: 1 }).escape().withMessage("Comment must not be more than 500 characters")
+            body('comment').isLength({ max: 500 }).escape().withMessage("Comment must not be more than 500 characters")
         ]
     },
 
