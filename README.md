@@ -3,7 +3,7 @@ This application offers a simple REST api for listing starwars' movies, posting 
 and fetching the character set for each movie.
 
 # Usage
-Base URL: `http://url/api`
+Base URL: `http://52.0.4.153:3000/api`
 
 ## List all starwars movies
 
@@ -45,18 +45,6 @@ No URL or data parameters
 {
   "status": "error",
   "message": "Acceptable content-type header is missing"
-}
-```
-OR
-
-   **Status Code:** 500
-  
-   **Data:**
-  
-```
-{
-  "status": "error",
-  "message": "Server error! Unable to fetch movies at this time. Please try again later"
 }
 ```
 
@@ -123,26 +111,18 @@ OR
 ```
 OR
 
-   **Status Code:** 400
+   **Status Code:** 422
   
    **Data:**
   
 ```
 {
   "status": "error",
-  "message": "Missing/Invalid parameter. Movie_id must be present and must be a number"
-}
-```
-OR
-
-   **Status Code:** 500
-  
-   **Data:**
-  
-```
-{
-  "status": "error",
-  "message": "Server error! Unable to fetch data at this time. Please try again later"
+  "errors": [
+        {
+            "message": "movie_id cannot be empty and must be a number"
+        }
+    ]
 }
 ```
 
@@ -192,27 +172,23 @@ Post anonymous comment for a movie. Comment must not be more than 500 characters
 ```
 OR
 
-   **Status Code:** 400
+   **Status Code:** 422
   
    **Data:**
 ```
 {
   "status": "error",
-  "message": "One or more of the required data parameters are missing"
+  "errors": [
+        {
+            "message": "movie_id cannot be empty and must be a number"
+        },
+        {
+            "message": comment must not be more than 500 characters long"
+        }
+    ]
 }
 ```
-OR
 
-   **Status Code:** 500
-  
-   **Data:**
-  
-```
-{
-  "status": "error",
-  "message": "Server error! Unable to fetch movies at this time. Please try again later"
-}
-```
   
   
 ## Fetch movie comments  
@@ -260,16 +236,20 @@ OR
   "message": "Acceptable content-type header is missing"
 }
 ```
-OR
+  OR
 
-   **Status Code:** 500
+   **Status Code:** 422
   
    **Data:**
   
 ```
 {
   "status": "error",
-  "message": "Server error! Unable to fetch movies at this time. Please try again later"
+  "errors": [
+        {
+            "message": "movie_id cannot be empty and must be a number"
+        }
+    ]
 }
 ```
 
