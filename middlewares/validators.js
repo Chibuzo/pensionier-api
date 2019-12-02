@@ -5,10 +5,11 @@ module.exports = {
         return [
             body('movie_id').isNumeric().trim().withMessage("movie_id cannot be empty and must be a number"),
             body('comment').isLength({ max: 500 }).escape().withMessage("Comment must not be more than 500 characters")
-        ]
+        ];
     },
 
     validate: (req, res, next) => {
+        console.log('Called')
         const raw_errors = validationResult(req);
 
         if (raw_errors.isEmpty()) {
@@ -22,5 +23,13 @@ module.exports = {
 
     fetchMovieRules: () => {
         return [check('movie_id').isNumeric().withMessage('Missing/Invalid parameter. Movie_id must be present and must be a number')];
+    },
+
+    parameterRules: () => {
+        return [
+            check('gender').optional({ nullable: true }).isIn(['female', 'male', 'unknown']).withMessage("gender must be either male, female or unknown"),
+            check('sort_by').optional({ nullable: true }).isIn(['gender', 'name', 'height']).withMessage("Invalid sorting parameter. Only gender, name and height are allowed"),
+            check('order').optional({ nullable: true }).isIn(['asc', 'desc']).withMessage("Invalid order value. Only 'asc' and 'desc' are allowed")
+        ];
     }
 }

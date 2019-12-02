@@ -1,8 +1,8 @@
 const routes = require('express').Router();
 const movieService = require('../services/movieService');
-const { validate, fetchMovieRules } = require('../middlewares/validators');
+const { validate, fetchMovieRules, parameterRules } = require('../middlewares/validators');
 
-routes.get('/', fetchMovieRules(), validate, (req, res) => {
+routes.get('/', fetchMovieRules(), parameterRules(), validate, (req, res) => {
     const movie_id = req.query.movie_id;
 
     movieService.fetchCharacters(movie_id, req.query.sort_by, req.query.order, req.query.gender).then(characters => {
