@@ -1,26 +1,25 @@
 const request = require('../Helpers/APIRequest')(process.env.STARWARS_API_URL);
+const cache = require('../Helpers/cache');
 const commentModel = require('../models/comment');
-const redis = require('redis');
-const redisClient = redis.createClient();
-const { promisify } = require('util');
-const fetchFromCache = promisify(redisClient.get).bind(redisClient);
+
 
 module.exports = {
     /**
-     * Fetch all Starwars movies along, including their comment count
+     * Fetch all Starwars movies, including their comment count
      * @returns {Promise} list of starwars movie
      */
     fetchMovies: async () => {
         try {
             let films;
-            const cached_films = await fetchFromCache('movies');
-            if (cached_films) {
-                films = JSON.parse(cached_films);
-            } else {
+
+            // get movies from cache
+            films = await cache.get('movies');
+
+            if (!films) {
                 films = await request.get('films');
 
                 // cache movies
-                redisClient.setex('movies', 3600 * 3, JSON.stringify(films));
+                cache.set('movies', films);
             }
 
             // sort by release date
@@ -28,6 +27,7 @@ module.exports = {
 
             // get movies' comment count
             let comments = [];
+
             try {
                 comments = await commentModel.getMovieCommentCounts();
             } catch (err) {
@@ -70,12 +70,15 @@ module.exports = {
 
         try {
             let movie;
-            const cached_movie = await fetchFromCache(`movie_${movie_id}`);
-            if (cached_movie) {
-                movie = JSON.parse(cached_movie);
-            } else {
+
+            // get movie data from cache
+            movie = await cache.get(`movie_${movie_id}`);
+
+            if (!movie) {
                 movie = await request.get(`films/${movie_id}`);
-                redisClient.setex(`movie_${movie_id}`, 3600 * 3, JSON.stringify(movie));
+
+                // save movie data in cache
+                cache.set(`movie_${movie_id}`, movie);
             }
 
             // fetch characters' data from movie data
@@ -83,13 +86,13 @@ module.exports = {
                 let character_data;
                 let id = character_url.split('/')[5];
 
-                const cached_character = await fetchFromCache(`character_${id}`);
-                if (cached_character) {
-                    character_data = JSON.parse(cached_character);
-                } else {
+                character_data = await cache.get(`character_${id}`);
+
+                if (!character_data) {
                     character_data = await request.get(`people/${id}`);
+
                     // cache character data
-                    redisClient.setex(`character_${id}`, 3600 * 3, JSON.stringify(character_data));
+                    cache.set(`character_${id}`, character_data);
                 }
 
                 return character_data;
@@ -121,7 +124,6 @@ module.exports = {
             characters.count = characters.length;
             return characters;
         } catch (err) {
-            //console.log(err)
             throw err;
         }
     }
