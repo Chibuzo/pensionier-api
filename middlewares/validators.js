@@ -9,7 +9,6 @@ module.exports = {
     },
 
     validate: (req, res, next) => {
-        console.log('Called')
         const raw_errors = validationResult(req);
 
         if (raw_errors.isEmpty()) {

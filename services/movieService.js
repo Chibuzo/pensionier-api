@@ -1,5 +1,9 @@
 const request = require('../Helpers/APIRequest')(process.env.STARWARS_API_URL);
 const commentModel = require('../models/comment');
+const redis = require('redis');
+const redisClient = redis.createClient();
+const { promisify } = require('util');
+const fetchFromCache = promisify(redisClient.get).bind(redisClient);
 
 module.exports = {
     /**
@@ -8,7 +12,16 @@ module.exports = {
      */
     fetchMovies: async () => {
         try {
-            const films = await request.get('films');
+            let films;
+            const cached_films = await fetchFromCache('movies');
+            if (cached_films) {
+                films = JSON.parse(cached_films);
+            } else {
+                films = await request.get('films');
+
+                // cache movies
+                redisClient.setex('movies', 3600 * 3, JSON.stringify(films));
+            }
 
             // sort by release date
             films.results.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
@@ -56,14 +69,33 @@ module.exports = {
         let total_height = 0;
 
         try {
-            const movie = await request.get(`films/${movie_id}`);
+            let movie;
+            const cached_movie = await fetchFromCache(`movie_${movie_id}`);
+            if (cached_movie) {
+                movie = JSON.parse(cached_movie);
+            } else {
+                movie = await request.get(`films/${movie_id}`);
+                redisClient.setex(`movie_${movie_id}`, 3600 * 3, JSON.stringify(movie));
+            }
 
             // fetch characters' data from movie data
-            const xters = await Promise.all(movie.characters.map(character_url => {
+            const xters = await Promise.all(movie.characters.map(async character_url => {
+                let character_data;
                 let id = character_url.split('/')[5];
-                let character_data = request.get(`people/${id}`);
+
+                const cached_character = await fetchFromCache(`character_${id}`);
+                if (cached_character) {
+                    character_data = JSON.parse(cached_character);
+                } else {
+                    character_data = await request.get(`people/${id}`);
+                    // cache character data
+                    redisClient.setex(`character_${id}`, 3600 * 3, JSON.stringify(character_data));
+                }
+
                 return character_data;
-            }));
+            })).catch(err => {
+                throw err;
+            });
 
             for (let i = 0; i < xters.length; i++) {
                 // apply gender filter
@@ -89,6 +121,7 @@ module.exports = {
             characters.count = characters.length;
             return characters;
         } catch (err) {
+            //console.log(err)
             throw err;
         }
     }
