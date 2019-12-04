@@ -1,12 +1,15 @@
 const routes = require('express').Router();
 const movieService = require('../services/movieService');
+const commentService = require('../services/commentService');
 const { commentValidationRules, validate, fetchMovieRules, parameterRules } = require('../middlewares/validators');
+const { handleError } = require('../helpers/errorHandler');
 
-routes.get('/', (req, res) => {
+routes.get('/', (req, res, next) => {
     movieService.fetchMovies().then(movies => {
         res.status(200).json({ status: 'success', movies });
     }).catch(error => {
-        res.status(error.statusCode).json({ status: 'error', error: error.message });
+        handleError(error, res);
+        //res.status(error.statusCode).json({ status: 'error', error: error.message });
     });
 });
 
@@ -22,7 +25,7 @@ routes.get('/:movie_id/characters', fetchMovieRules(), parameterRules(), validat
             characters
         });
     }).catch(error => {
-        res.status(error.statusCode).json({ status: 'error', message: error.message });
+        handleError(error, res);
     });
 });
 
@@ -31,7 +34,7 @@ routes.get('/:movie_id/comments', fetchMovieRules(), validate, (req, res) => {
     commentService.fetchMovieComments(req.params.movie_id).then(comments => {
         res.status(200).json({ status: 'success', comments });
     }).catch(error => {
-        res.status(error.statusCode).json({ error: "error", message: error.message });
+        handleError(error, res);
     });
 });
 
@@ -40,7 +43,7 @@ routes.post('/comment', commentValidationRules(), validate, (req, res) => {
     commentService.postComment(req.body.comment, req.body.movie_id, req.connection.remoteAddress).then(comment => {
         res.status(201).json({ status: 'success', comment_id: comment.id });
     }).catch(error => {
-        res.status(500).json({ status: 'error', error });
+        handleError(error, res);
     });
 });
 

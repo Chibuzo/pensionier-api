@@ -1,6 +1,7 @@
-const request = require('../Helpers/APIRequest')(process.env.STARWARS_API_URL);
-const cache = require('../Helpers/cache');
+const request = require('../helpers/APIRequest')(process.env.STARWARS_API_URL);
+const cache = require('../helpers/cache');
 const commentModel = require('../models/comment');
+const { ErrorHandler } = require('../helpers/errorHandler');
 
 
 module.exports = {
@@ -9,50 +10,50 @@ module.exports = {
      * @returns {Promise} list of starwars movie
      */
     fetchMovies: async () => {
-        try {
-            let films;
+        let films;
 
-            // get movies from cache
-            films = await cache.get('movies');
+        // get movies from cache
+        films = await cache.get('movies');
 
-            if (!films) {
-                films = await request.get('films');
-
-                // cache movies
-                cache.set('movies', films);
-            }
-
-            // sort by release date
-            films.results.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
-
-            // get movies' comment count
-            let comments = [];
-
+        if (!films) {
             try {
-                comments = await commentModel.getMovieCommentCounts();
+                films = await request.get('films');
             } catch (err) {
-                // this isn't sooo fatal so we'll continue...
-                console.log(err);
+                throw err;
             }
 
-            // get relevant movie fields
-            const movies = films.results.map(film => {
-                let movie_id = film.url.split('/')[5];
-
-                // get movie comment count
-                let count = comments.find(comment => comment.movie_id == movie_id);
-
-                return {
-                    title: film.title,
-                    opening_crawl: film.opening_crawl,
-                    comment_count: count ? count.comment_count : 0,
-                };
-            });
-
-            return await movies;
-        } catch (err) {
-            throw err;
+            // cache movies
+            cache.set('movies', films);
         }
+
+        // sort by release date
+        films.results.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+
+        // get movies' comment count
+        let comments = [];
+
+        try {
+            comments = await commentModel.getMovieCommentCounts();
+        } catch (err) {
+            // this isn't sooo fatal so we'll continue...
+            console.log(err);
+        }
+
+        // get relevant movie fields
+        const movies = films.results.map(film => {
+            let movie_id = film.url.split('/')[5];
+
+            // get movie comment count
+            let count = comments.find(comment => comment.movie_id == movie_id);
+
+            return {
+                title: film.title,
+                opening_crawl: film.opening_crawl,
+                comment_count: count ? count.comment_count : 0,
+            };
+        });
+
+        return await movies;
     },
 
     /**
@@ -114,8 +115,37 @@ module.exports = {
         } catch (err) {
             throw err;
         }
+    },
+
+
+    /**
+     * check if movie_id points to an existing movie
+     * @param {Integer} movie_id
+     * @returns {Boolean}
+     */
+    isValidMovie: async movie_id => {
+        let movie;
+
+        // get movie data from cache
+        movie = cache.get(`movie_${movie_id}`);
+
+        if (!movie) {
+            try {
+                movie = await request.get(`films/${movie_id}`);
+
+                // save movie data in cache
+                cache.set(`movie_${movie_id}`, movie);
+            } catch (err) {
+                if (err.statusCode === 404) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }
+
 
 function sortResult(data_array, sort_field, order) {
     data_array.sort((a, b) => {
@@ -126,6 +156,7 @@ function sortResult(data_array, sort_field, order) {
         }
     });
 }
+
 
 function filter(characters, gender) {
     return characters.filter(character => character.gender === gender);

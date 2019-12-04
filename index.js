@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const apiRoutes = require('./routes');
 const header_validation = require('./middlewares/header_validator');
+const { handleError, ErrorHandler } = require('./helpers/errorHandler');
 
 app.use(express.json());
 
@@ -14,9 +15,13 @@ app.use('/api', header_validation, apiRoutes);
 
 // catch 404
 app.use((req, res, next) => {
-    const error = new Error("Route not found!");
-    error.status = 404;
-    next(error);
+    throw new ErrorHandler(404, "Route not found!");
+});
+
+
+app.use((err, req, res, next) => {
+    console.log(err);
+    handleError(err, res);
 });
 
 app.set('port', process.env.PORT);
