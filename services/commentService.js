@@ -9,6 +9,25 @@ module.exports = {
      * @returns {Promise} comment id
      */
     postComment: async (comment_text, movie_id, public_ip) => {
+        // check if movie_id points to an existing movie
+        let movie;
+
+        // get movie data from cache
+        movie = await cache.get(`movie_${movie_id}`);
+
+        if (!movie) {
+            try {
+                movie = await request.get(`films/${movie_id}`);
+            } catch (err) {
+                if (err.number === 404) {
+                    throw new Error()
+                }
+            }
+
+            // save movie data in cache
+            cache.set(`movie_${movie_id}`, movie);
+        }
+
         const comment = {
             movie_id: movie_id,
             comment: comment_text,

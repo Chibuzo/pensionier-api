@@ -46,7 +46,6 @@ module.exports = {
                     title: film.title,
                     opening_crawl: film.opening_crawl,
                     comment_count: count ? count.comment_count : 0,
-                    //release_date: film.release_date,
                 };
             });
 
@@ -65,9 +64,6 @@ module.exports = {
      * @returns {Promise} list of movie characters
      */
     fetchCharacters: async (movie_id, sort, sort_order = 'desc', gender) => {
-        let characters = [];
-        let total_height = 0;
-
         try {
             let movie;
 
@@ -82,7 +78,7 @@ module.exports = {
             }
 
             // fetch characters' data from movie data
-            const xters = await Promise.all(movie.characters.map(async character_url => {
+            const characterlist = await Promise.all(movie.characters.map(async character_url => {
                 let character_data;
                 let id = character_url.split('/')[5];
 
@@ -100,24 +96,16 @@ module.exports = {
                 throw err;
             });
 
-            for (let i = 0; i < xters.length; i++) {
-                // apply gender filter
-                if (gender && gender !== xters[i].gender) continue;
+            // [apply gender filter], map array values
+            const characters = gender ? filter(characterlist, gender).map(mapCharacterData) : characterlist.map(mapCharacterData);
 
-                characters.push({
-                    name: xters[i].name,
-                    birth_year: xters[i].birth_year,
-                    eye_colour: xters[i].eye_color,
-                    gender: xters[i].gender,
-                    mass: xters[i].mass,
-                    height: xters[i].height
-                });
-
-                total_height += Number.isInteger(parseInt(xters[i].height)) ? parseInt(xters[i].height) : 0;
-            }
+            // get total height
+            const total_height = characters.reduce((total_height, character) => {
+                return Number.isInteger(parseInt(character.height)) ? total_height + parseInt(character.height) : 0;
+            }, 0);
 
             // apply sort (default desc)
-            sort && characters.customSort(sort, sort_order);
+            sort && sortResult(characters, sort, sort_order);
 
             characters.total_height_cm = total_height + 'cm';
             characters.total_height_feet_inches = cmToFeetInches(total_height);
@@ -129,8 +117,8 @@ module.exports = {
     }
 }
 
-Array.prototype.customSort = function (sort_field, order) {
-    this.sort((a, b) => {
+function sortResult(data_array, sort_field, order) {
+    data_array.sort((a, b) => {
         if (sort_field == 'height') {
             return order == 'asc' ? a[sort_field] - b[sort_field] : b[sort_field] - a[sort_field];
         } else {
@@ -138,6 +126,23 @@ Array.prototype.customSort = function (sort_field, order) {
         }
     });
 }
+
+function filter(characters, gender) {
+    return characters.filter(character => character.gender === gender);
+}
+
+
+function mapCharacterData(character) {
+    return {
+        name: character.name,
+        birth_year: character.birth_year,
+        eye_colour: character.eye_color,
+        gender: character.gender,
+        mass: character.mass,
+        height: character.height
+    }
+}
+
 
 function cmToFeetInches(len) {
     const ft_const = 30.48; // quantity of cm in 1 feet
