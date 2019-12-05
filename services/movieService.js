@@ -127,7 +127,7 @@ module.exports = {
         let movie;
 
         // get movie data from cache
-        movie = cache.get(`movie_${movie_id}`);
+        movie = await cache.get(`movie_${movie_id}`);
 
         if (!movie) {
             try {
@@ -136,13 +136,14 @@ module.exports = {
                 // save movie data in cache
                 cache.set(`movie_${movie_id}`, movie);
             } catch (err) {
+                console.log(err.statusCode)
                 if (err.statusCode === 404) {
-                    return false;
+                    throw err;
                 }
             }
         }
 
-        return true;
+        return movie;
     }
 }
 

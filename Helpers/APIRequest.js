@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { Errorhandler } = require('../helpers/errorHandler');
+const { ErrorHandler } = require('../helpers/errorHandler');
 
 const APIRequest = api_url => {
     let option = {
@@ -13,7 +13,7 @@ const APIRequest = api_url => {
             const response = await axios.get(url, option);
             return await response.data;
         } catch (err) {
-            throw new Errorhandler(err.response.status, err.response.data.detail);
+            throw new ErrorHandler(err.response.status, err.response.data.detail);
         }
     }
 

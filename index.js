@@ -13,14 +13,13 @@ app.get('/', (req, res) => {
 
 app.use('/api', header_validation, apiRoutes);
 
-// catch 404
+// catch 404 routes
 app.use((req, res, next) => {
     throw new ErrorHandler(404, "Route not found!");
 });
 
 
 app.use((err, req, res, next) => {
-    console.log(err);
     handleError(err, res);
 });
 
