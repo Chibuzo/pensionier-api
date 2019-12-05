@@ -53,7 +53,7 @@ No URL or data parameters
 
 * **Endpoint:**
 
-  `GET` /characters
+  `GET` /movies/:movie_id/characters
   
 * **Header:**  
 
@@ -133,7 +133,7 @@ Post anonymous comment for a movie. Comment must not be more than 500 characters
 
 * **Endpoint:**
 
-  `POST` /comments
+  `POST` /movies/comment
   
 * **Header:**  
 
@@ -172,6 +172,17 @@ Post anonymous comment for a movie. Comment must not be more than 500 characters
 ```
 OR
 
+ **Status Code:** 404
+  
+  **Data:**
+```
+{
+  "status": "error",
+  "message": "Supplied movie_id doesn't point to any starwars movie!"
+}
+```
+OR
+
    **Status Code:** 422
   
    **Data:**
@@ -195,7 +206,7 @@ OR
 
 * **Endpoint:**
 
-  `GET` /comments
+  `GET` /movies/:movie_id/comments
   
 * **Header:**  
 
