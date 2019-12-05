@@ -1,9 +1,50 @@
 const request = require('../helpers/APIRequest')(process.env.STARWARS_API_URL);
 const cache = require('../helpers/cache');
-const commentModel = require('../models/comment');
+const commentModel = require('../models').Comment;
+console.log(commentModel)
 const { ErrorHandler } = require('../helpers/errorHandler');
 
 
+/**
+ * @swagger
+ *  components:
+ *    schemas:
+ *      Movie:
+ *        type: object
+ *        properties:
+ *          title:
+ *             type: string
+ *          opening_crawl:
+ *             type: text
+ *          comment_count:
+ *             type: integer
+ *        example:
+ *          title: 'The Phantom menance'
+ *          opening_crawl: 'In a faraway planet...'
+ *          comment_count: 3
+ *      Character:
+ *        type: object
+ *        properties:
+ *          name:
+ *             type: string
+ *          birth_year:
+ *             type: string
+ *          eye_color:
+ *             type: string
+ *          gender:
+ *              type: string
+ *          mass:
+ *              type: string
+ *          height:
+ *              type: string
+ *        example:
+ *          name: 'Duke Nukem'
+ *          birth_year: 'Unknown'
+ *          eye_colour: 'blue'
+ *          gender: 'male'
+ *          mass: '60'
+ *          height: '175'
+ */
 module.exports = {
     /**
      * Fetch all Starwars movies, including their comment count
@@ -116,35 +157,6 @@ module.exports = {
             throw err;
         }
     },
-
-
-    /**
-     * check if movie_id points to an existing movie
-     * @param {Integer} movie_id
-     * @returns {Boolean}
-     */
-    isValidMovie: async movie_id => {
-        let movie;
-
-        // get movie data from cache
-        movie = await cache.get(`movie_${movie_id}`);
-
-        if (!movie) {
-            try {
-                movie = await request.get(`films/${movie_id}`);
-
-                // save movie data in cache
-                cache.set(`movie_${movie_id}`, movie);
-            } catch (err) {
-                console.log(err.statusCode)
-                if (err.statusCode === 404) {
-                    throw err;
-                }
-            }
-        }
-
-        return movie;
-    }
 }
 
 

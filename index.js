@@ -11,7 +11,8 @@ app.get('/', (req, res) => {
     res.status(200).json({ message: 'Welcome to star wars api!' });
 });
 
-app.use('/api', header_validation, apiRoutes);
+//app.use('/api', header_validation, apiRoutes);
+app.use('/api', apiRoutes);
 
 // catch 404 routes
 app.use((req, res, next) => {

@@ -52,7 +52,7 @@ module.exports = {
      */
     fetchMovieComments: async movie_id => {
         try {
-            const raw_comments = await commentModel.getMovieComments(movie_id);
+            const raw_comments = await commentModel.findAll({ where: { movie_id: movie_id } });
 
             const comments = await raw_comments.map(comment => {
                 return {
