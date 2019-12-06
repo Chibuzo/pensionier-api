@@ -8,7 +8,7 @@ const { handleError } = require('../helpers/errorHandler');
  * @swagger
  * tags:
  *   name: Movies
- *   description: Movie management
+ *   description: Movie Data Services
  */
 
 /**
@@ -43,7 +43,7 @@ routes.get('/', (req, res, next) => {
  * path:
  *  /movies/{movie_id}/characters:
  *    get:
- *      summary: Fetch all comments for the selected movie
+ *      summary: Fetch all characters for the selected movie
  *      tags: [Movies]
  *      parameters:
  *        - in: path
@@ -136,7 +136,7 @@ routes.get('/:movie_id/comments', fetchMovieRules(), validate, (req, res) => {
  * path:
  *  /movies/comment:
  *    post:
- *      summary: Post anonymous comment for a movies
+ *      summary: Post anonymous comment for a movie
  *      tags: [Movies]
  *      requestBody:
  *        required: true

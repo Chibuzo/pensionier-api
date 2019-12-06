@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const apiRoutes = require('./routes');
-const header_validation = require('./middlewares/header_validator');
 const { handleError, ErrorHandler } = require('./helpers/errorHandler');
 
 app.use(express.json());

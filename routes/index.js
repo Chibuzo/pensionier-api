@@ -1,6 +1,7 @@
 const routes = require('express').Router();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const header_validation = require('../middlewares/header_validator');
 
 
 const movies = require('./movie');
@@ -10,7 +11,7 @@ routes.get('/', (req, res) => {
 });
 
 
-routes.use('/movies', movies);
+routes.use('/movies', header_validation, movies);
 
 // Swagger set up
 const options = {
@@ -32,10 +33,10 @@ const options = {
         },
         servers: [
             {
-                url: "http://localhost:3001/api"
+                url: "http://52.0.4.153:3000/api"
             },
             {
-                url: "http://52.0.4.153:3000/api"
+                url: "http://localhost:3001/api"
             }
         ]
     },
