@@ -1,15 +1,20 @@
 version: '3.6'
 services:
   mysql_db: 
-    build: ./db-setup
+    #build: ./db-setup
+    image: mysql
     restart: always
+    command: mysqld --default-authentication-plugin=mysql_native_password
     environment:
+      MYSQL_DATABASE: 'starwars'
+      MYSQL_USER: 'chibuzo'
+      MYSQL_PASSWORD: 'untold'
       MYSQL_ROOT_PASSWORD: untold-root
       MYSQL_ROOT_HOST: '%'
     ports:
-      - "127.0.0.1:3306:3306"
+      - '3308:3308'
     expose:
-      - "3306"  
+      - "3308"  
   starwars-api:
     restart: always
     build: .
@@ -17,8 +22,6 @@ services:
       - "3000:3000"
     depends_on:
       - mysql_db
-    ports:
-      - "127.0.0.1:8080:8080"
     links:
       - mysql_db
     command: ["./wait-for-db.sh"]    

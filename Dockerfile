@@ -14,6 +14,6 @@ RUN set -ex; \
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 3000
 
 CMD ["node", "index.js"]
