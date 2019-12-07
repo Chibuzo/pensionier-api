@@ -1,0 +1,24 @@
+version: '3.6'
+services:
+  mysql_db: 
+    build: ./db-setup
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: untold-root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "127.0.0.1:3306:3306"
+    expose:
+      - "3306"  
+  starwars-api:
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql_db
+    ports:
+      - "127.0.0.1:8080:8080"
+    links:
+      - mysql_db
+    command: ["./wait-for-db.sh"]    
