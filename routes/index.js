@@ -21,11 +21,7 @@ const options = {
             title: "Star wars API",
             version: "1.0.0",
             description:
-                "This application offers a simple REST api for listing starwars' movies, posting comment on movies and fetching the character set for a movie.",
-            license: {
-                name: "MIT",
-                url: "https://choosealicense.com/licenses/mit/"
-            }
+                "This application offers a simple REST api for listing starwars' movies, posting comment on movies and fetching the character set for a movie."
         },
         servers: [
             {

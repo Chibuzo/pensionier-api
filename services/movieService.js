@@ -18,7 +18,7 @@ module.exports = {
             try {
                 films = await request.get('films');
             } catch (err) {
-                throw err;
+                throw new ErrorHandler(err.statusCode, err.message);
             }
 
             // cache movies
@@ -94,7 +94,7 @@ module.exports = {
 
                 return character_data;
             })).catch(err => {
-                throw err; // explain
+                throw new ErrorHandler(500, "Error fetching movie characters. Please try again later");
             });
 
             // [apply gender filter], map array values
@@ -113,9 +113,30 @@ module.exports = {
             characters.count = characters.length;
             return characters;
         } catch (err) {
-            throw err;
+            throw new ErrorHandler(500, "Error processing movie characters. Please try again later");
         }
     },
+
+    validateMovieId: async movie_id => {
+        let movie;
+
+        // get movie data from cache
+        movie = await cache.get(`movie_${movie_id}`);
+
+        if (movie.length < 1) {
+            try {
+                movie = await request.get(`films/${movie_id}`);
+
+                // save movie data in cache
+                cache.set(`movie_${movie_id}`, movie);
+
+                return movie;
+            } catch (err) {
+                // cause no problems
+            }
+        }
+        return movie;
+    }
 }
 
 
