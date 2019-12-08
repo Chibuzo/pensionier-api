@@ -25,22 +25,18 @@ const options = {
             license: {
                 name: "MIT",
                 url: "https://choosealicense.com/licenses/mit/"
-            },
-            contact: {
-                name: "Chibuzo",
-                email: "chibuzohenry@gmail.com"
             }
         },
         servers: [
             {
-                url: "http://52.0.4.153:3000/api"
+                url: "http://149.202.58.198:3000/api"
             },
             {
-                url: "http://localhost:3001/api"
+                url: "http://localhost:3000/api"
             }
         ]
     },
-    apis: ["./routes/*.js", "./models/comment.js", "./services/movieService.js"]
+    apis: ['./docs/*.yml']
 };
 const specs = swaggerJsdoc(options);
 routes.use("/docs", swaggerUi.serve);

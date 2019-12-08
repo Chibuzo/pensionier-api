@@ -1,28 +1,5 @@
 'use strict';
 
-/**
- * @swagger
- *  components:
- *    schemas:
- *      Comment:
- *        type: object
- *        required:
- *          - comment
- *          - movie_id
- *        properties:
- *          comment:
- *            type: text
- *          public_ip:
- *            type: string
- *            description: IP address of the commenter.
- *          movie_id:
- *             type: integer
- *          createdAt:
- *              type: datetime
- *        example:
- *           comment: 'I love this movie'
- *           movie_id: 1
- */
 module.exports = (sequelize, DataTypes) => {
     const Comment = sequelize.define('Comment', {
         comment: DataTypes.TEXT,

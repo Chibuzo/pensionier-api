@@ -1,50 +1,8 @@
 const request = require('../helpers/APIRequest')(process.env.STARWARS_API_URL);
 const cache = require('../helpers/cache');
 const commentModel = require('../models').Comment;
-console.log(commentModel)
 const { ErrorHandler } = require('../helpers/errorHandler');
 
-
-/**
- * @swagger
- *  components:
- *    schemas:
- *      Movie:
- *        type: object
- *        properties:
- *          title:
- *             type: string
- *          opening_crawl:
- *             type: text
- *          comment_count:
- *             type: integer
- *        example:
- *          title: 'The Phantom menance'
- *          opening_crawl: 'In a faraway planet...'
- *          comment_count: 3
- *      Character:
- *        type: object
- *        properties:
- *          name:
- *             type: string
- *          birth_year:
- *             type: string
- *          eye_color:
- *             type: string
- *          gender:
- *              type: string
- *          mass:
- *              type: string
- *          height:
- *              type: string
- *        example:
- *          name: 'Duke Nukem'
- *          birth_year: 'Unknown'
- *          eye_colour: 'blue'
- *          gender: 'male'
- *          mass: '60'
- *          height: '175'
- */
 module.exports = {
     /**
      * Fetch all Starwars movies, including their comment count
@@ -97,6 +55,7 @@ module.exports = {
         return await movies;
     },
 
+
     /**
      * Fetch movie characters
      * @param {Integer} movie_id
@@ -135,7 +94,7 @@ module.exports = {
 
                 return character_data;
             })).catch(err => {
-                throw err;
+                throw err; // explain
             });
 
             // [apply gender filter], map array values

@@ -1,0 +1,37 @@
+components:
+     schemas:
+       Comment:
+         type: object
+         required:
+           - comment
+           - movie_id
+         properties:
+           comment:
+             type: text
+           public_ip:
+             type: string
+             description: IP address of the commenter.
+           movie_id:
+              type: integer
+           createdAt:
+               type: datetime
+         example:
+            comment: 'I love this movie'
+            movie_id: 1
+       Comments:
+         type: object 
+         properties:
+            status:
+              type: string
+            comments:
+              type: array
+              items:
+                comment:
+                  type: string
+                public_ip:
+                  type: string
+         example:
+            status: 'success'
+            comments:
+              - comment: 'Nice movie'
+                public_ip: '172.143.10.93'                  
