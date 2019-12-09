@@ -4,8 +4,9 @@ and fetching the character set for each movie.
 
 # Installation
 - Clone the repository 
+- Edit the database environment data in `docker-compose.yml` file to match the settings in your `config/config.json` file
 - Run `docker-compose up -d` from the project's directory
-- Chill for about 30 seconds
+- Chill a while for services to start up
 
 Then enjoy!
 
