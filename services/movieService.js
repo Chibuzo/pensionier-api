@@ -44,7 +44,6 @@ module.exports = {
 
             // get movie comment count
             let count = comments.find(comment => comment.movie_id == movie_id);
-
             return {
                 title: film.title,
                 opening_crawl: film.opening_crawl,

@@ -31,7 +31,7 @@ module.exports = {
             const data = await cacheServer.fetchFromCache(label);
             return data ? await JSON.parse(data) : '';
         } else {
-            return '';
+            return;
         }
     },
 

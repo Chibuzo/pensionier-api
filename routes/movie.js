@@ -44,7 +44,7 @@ routes.get('/:movie_id/comments', fetchMovieRules(), validate, (req, res) => {
 
 
 // post comment for a movie
-routes.post('/comment', commentValidationRules(), validate, (req, res) => {
+routes.post('/:movie_id/comments', commentValidationRules(), validate, (req, res) => {
     commentService.postComment(req.body.comment, req.body.movie_id, req.connection.remoteAddress).then(comment => {
         res.status(201).json({ status: 'success', comment_id: comment.id });
     }).catch(error => {
