@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     Comment.getMovieCommentCounts = function () {
-        return sequelize.query("SELECT COUNT(*) AS comment_count, movie_id FROM comments GROUP BY movie_id", { type: sequelize.QueryTypes.SELECT });
+        return sequelize.query("SELECT COUNT(*) AS comment_count, movie_id FROM Comments GROUP BY movie_id", { type: sequelize.QueryTypes.SELECT });
     }
 
     return Comment;
