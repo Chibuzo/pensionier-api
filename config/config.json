@@ -1,9 +1,9 @@
 {
     "development": {
-        "username": "root",
-        "password": "",
+        "username": "chibuzo",
+        "password": "untold",
         "database": "starwars",
-        "host": "localhost",
+        "host": "mysql_db",
         "dialect": "mysql",
         "operatorsAliases": false
     },
