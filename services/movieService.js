@@ -65,38 +65,12 @@ module.exports = {
      */
     fetchCharacters: async (movie_id, sort, sort_order = 'desc', gender) => {
         try {
-            let movie;
+            var movie = await fetchMovie(movie_id);
 
-            // get movie data from cache
-            movie = await cache.get(`movie_${movie_id}`);
+            // fetch characters from movie
+            const characterlist = await fetchCharacterSet(movie);
 
-            if (!movie) {
-                movie = await request.get(`films/${movie_id}`);
-
-                // save movie data in cache
-                cache.set(`movie_${movie_id}`, movie);
-            }
-
-            // fetch characters' data from movie data
-            const characterlist = await Promise.all(movie.characters.map(async character_url => {
-                let character_data;
-                let id = character_url.split('/')[5];
-
-                character_data = await cache.get(`character_${id}`);
-
-                if (!character_data) {
-                    character_data = await request.get(`people/${id}`);
-
-                    // cache character data
-                    cache.set(`character_${id}`, character_data);
-                }
-
-                return character_data;
-            })).catch(err => {
-                throw new ErrorHandler(500, "Error fetching movie characters. Please try again later");
-            });
-
-            // [apply gender filter], map array values
+            // [apply gender filter], map required characters' data
             const characters = gender ? filter(characterlist, gender).map(mapCharacterData) : characterlist.map(mapCharacterData);
 
             // get total height
@@ -112,30 +86,63 @@ module.exports = {
             characters.count = characters.length;
             return characters;
         } catch (err) {
-            throw new ErrorHandler(500, "Error processing movie characters. Please try again later");
+            throw new ErrorHandler(err.statusCode, err.message);
         }
     },
 
-    validateMovieId: async movie_id => {
-        let movie;
-
-        // get movie data from cache
-        movie = await cache.get(`movie_${movie_id}`);
-
-        if (movie.length < 1) {
-            try {
-                movie = await request.get(`films/${movie_id}`);
-
-                // save movie data in cache
-                cache.set(`movie_${movie_id}`, movie);
-
-                return movie;
-            } catch (err) {
-                // cause no problems
-            }
+    isValidMovieId: async movie_id => {
+        try {
+            return await fetchMovie(movie_id);
+        } catch (err) {
+            return false;
         }
-        return movie;
     }
+}
+
+
+/**
+ * 
+ * Miscellaneous functions
+ */
+
+async function fetchMovie(movie_id) {
+    let movie;
+
+    // get movie data from cache
+    movie = await cache.get(`movie_${movie_id}`);
+
+    if (!movie) {
+        try {
+            movie = await request.get(`films/${movie_id}`);
+
+            // save movie data in cache
+            cache.set(`movie_${movie_id}`, movie);
+        } catch (err) {
+            throw new ErrorHandler(err.statusCode, err.message);
+        }
+    }
+    return movie;
+}
+
+
+async function fetchCharacterSet(movie) {
+    return await Promise.all(movie.characters.map(async character_url => {
+        let character_data;
+        let id = character_url.split('/')[5];
+
+        character_data = await cache.get(`character_${id}`);
+
+        if (!character_data) {
+            character_data = await request.get(`people/${id}`);
+
+            // cache character data
+            cache.set(`character_${id}`, character_data);
+        }
+
+        return character_data;
+    })).catch(err => {
+        throw new ErrorHandler(500, "Error fetching movie characters. Please try again later");
+    });
 }
 
 

@@ -1,5 +1,5 @@
 path:
-   /movies/comment:
+   /movies/{movie_id}/comments:
      post:
        summary: Post anonymous comment for a movie
        tags: [Movies]
@@ -71,56 +71,4 @@ path:
                     status: 'error'
                     errors:
                        - message: 'Missing/Invalid parameter. Movie_id must be present and must be a number.'
-                       - message: 'Comment can not be empty and must not be more than 500 characters'
-   /movies/{movie_id}/comments:
-     get:
-       summary: Fetch all comments for the selected movie
-       tags: [Movies]
-       parameters:
-         - in: path
-           name: movie_id
-           required: true
-           content:
-             application/json:
-               schema:
-                  type: integer
-               required: true 
-       responses:
-         "200":
-           description: An array of movie comments
-           content:
-             application/json:
-               schema:
-                  $ref: '#/components/schemas/Comments'
-         "500":
-           description: Server Error
-           content:
-             application/json:
-               schema:
-                 type: object
-                 properties:
-                    status:
-                       type: string
-                    message:
-                       type: string
-                 example:
-                    status: 'error'
-                    message: 'Unable to fetch comments at the momemt. Please try again later.'
-         "422":
-           description: Request can not be processed
-           content:
-             application/json:
-               schema:
-                 type: object
-                 properties:
-                    status:
-                       type: string
-                    errors:
-                       type: array
-                       items:
-                           message:
-                               type: string
-                 example:
-                    status: 'error'
-                    errors:
-                       - message: 'Missing/Invalid parameter. Movie_id must be present and must be a number.'
+                       - message: 'Comment can not be empty and must not be more than 500 characters'                       
