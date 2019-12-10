@@ -2,13 +2,15 @@
 This application offers a simple REST api for listing starwars' movies, posting comment on movies 
 and fetching the character set for each movie.
 
+# Prerequisities
+- Docker, and docker-compose installation
+
 # Installation
 - Clone the repository 
-- Edit the database environment data in `docker-compose.yml` file to match the settings in your `config/config.json` file
+- Edit the `.env` file with your preferred database settings. (**NOTE:** your database host (`DB_HOST`) should be the name of the mysql service as entered in the docker-compose file)
 - Run `docker-compose up -d` from the project's directory
 - Chill a while for services to start up
 
-Then enjoy!
 
 # Documentation
 
