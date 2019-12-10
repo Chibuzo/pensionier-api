@@ -10,7 +10,11 @@ RUN npm install
 RUN set -ex; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-    mysql-client
+    mysql-client \
+    systemd \
+    redis-server
+
+RUN systemctl enable redis-server.service    
 
 COPY . .
 
