@@ -73,7 +73,7 @@ module.exports = {
             // [apply gender filter], map required characters' data
             const characters = gender ? filter(characterlist, gender).map(mapCharacterData) : characterlist.map(mapCharacterData);
 
-            // get total height
+            // get total height of characters
             const total_height = characters.reduce((total_height, character) => {
                 return Number.isInteger(parseInt(character.height)) ? total_height + parseInt(character.height) : 0;
             }, 0);
