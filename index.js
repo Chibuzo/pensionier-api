@@ -7,7 +7,7 @@ const { handleError, ErrorHandler } = require('./helpers/errorHandler');
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome to star wars api!' });
+    res.status(200).json({ message: 'Welcome to my api!' });
 });
 
 //app.use('/api', header_validation, apiRoutes);

@@ -3,15 +3,10 @@ const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const header_validation = require('../middlewares/header_validator');
 
-
-const movies = require('./movie');
-
 routes.get('/', (req, res) => {
     res.status(200).json({ message: 'What are you looking for here??!!' });
 });
 
-
-routes.use('/movies', header_validation, movies);
 
 // Swagger set up
 const options = {

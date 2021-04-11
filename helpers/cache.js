@@ -29,7 +29,7 @@ module.exports = {
     get: async label => {
         if (cacheServer.client.connected) {
             const data = await cacheServer.fetchFromCache(label);
-            return data ? await JSON.parse(data) : '';
+            return data ? JSON.parse(data) : '';
         } else {
             return;
         }

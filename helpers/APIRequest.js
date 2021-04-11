@@ -11,14 +11,19 @@ const APIRequest = api_url => {
         option.params = params;
         try {
             const response = await axios.get(url, option);
-            return await response.data;
+            return response.data;
         } catch (err) {
             throw new ErrorHandler(err.response.status, err.response.data.detail);
         }
     }
 
-    const post = (url, params = {}) => {
-
+    const post = (url, body = {}) => {
+        try {
+            const response = await axios.post(url, body, option);
+            return response.data;
+        } catch (err) {
+            throw new ErrorHandler(err.response.status, err.response.data.detail);
+        }
     }
 
     return {
