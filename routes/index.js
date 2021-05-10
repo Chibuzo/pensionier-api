@@ -1,11 +1,14 @@
 const routes = require('express').Router();
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const personRoutes = require('./person');
 const header_validation = require('../middlewares/header_validator');
 
 routes.get('/', (req, res) => {
     res.status(200).json({ message: 'What are you looking for here??!!' });
 });
+
+routes.use('/persons', personRoutes);
 
 
 // Swagger set up

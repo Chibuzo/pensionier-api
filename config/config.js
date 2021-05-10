@@ -1,28 +1,21 @@
 require('dotenv').config();
 
-module.exports = {
+const config = {
     "development": {
-        "username": process.env.DB_USER,
+        "user": process.env.DB_USER,
         "password": process.env.DB_PASSWORD,
-        "database": process.env.DB_NAME,
-        "host": process.env.DB_HOST,
-        "dialect": "mysql",
-        "operatorsAliases": false
+        "connectString": `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_SERVICE}`,
     },
     "test": {
-        "username": "root",
+        "user": "root",
         "password": null,
-        "database": "",
-        "host": "127.0.0.1",
-        "dialect": "mysql",
-        "operatorsAliases": false
+        "connectString": "",
     },
     "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
-        "dialect": "mysql",
-        "operatorsAliases": false
+        "user": process.env.DB_USER,
+        "password": process.env.DB_PASSWORD,
+        "connectString": `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_SERVICE}`,
     }
 }
+
+module.exports = { config };
