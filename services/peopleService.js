@@ -60,7 +60,7 @@ const fetchPersonAssignement = async person_id => {
             pr.payroll_name,
             o.name organization,
             pg.group_name,
-            l.location_code
+            l.description location
         FROM HR.PER_ALL_ASSIGNMENTS_F a
             LEFT OUTER JOIN HR.PER_GRADES g USING(GRADE_ID)
             LEFT JOIN HR.PER_JOBS j using(job_id)
@@ -68,10 +68,11 @@ const fetchPersonAssignement = async person_id => {
             LEFT JOIN hr.HR_ALL_POSITIONS_F p using (position_id)
             LEFT JOIN HR.PER_NUMBER_GENERATION_CONTROLS bg USING(BUSINESS_GROUP_ID)
             LEFT JOIN HR.PAY_ALL_PAYROLLS_F pr USING(PAYROLL_ID)
-            LEFT JOIN HR.HR_ALL_ORGANIZATION_UNITS o USING(ORGANIZATION_ID)
+            LEFT JOIN HR.HR_ALL_ORGANIZATION_UNITS o ON o.ORGANIZATION_ID = a.ORGANIZATION_ID
             LEFT JOIN HR.PAY_PEOPLE_GROUPS pg USING(PEOPLE_GROUP_ID)
             LEFT JOIN HR.HR_LOCATIONS_ALL l USING(LOCATION_ID)
         WHERE a.PERSON_ID = :person_id
+        ORDER BY a.EFFECTIVE_END_DATE DESC
     `;
 
     const db = await getConnection();
