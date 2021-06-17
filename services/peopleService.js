@@ -77,10 +77,24 @@ const fetchPersonAssignement = async person_id => {
 
     const db = await getConnection();
     const result = await db.execute(sql, [person_id]);
-    return result.rows[0];
+    const assignment = result.rows[0];
+    if (String(assignment.PAYROLL_NAME).toUpperCase() !== ('Civil Pensions Payroll').toUpperCase()) throw new ErrorHandler(400, 'Employee doesn\'t qualify for pension');
+    return assignment;
+}; // 130
+
+const queryTest = async () => {
+    const sql = `select person_id, full_name, payroll_name 
+        from per_all_people_f p
+        join per_all_assignments_f a using(person_id)
+        join pay_all_payrolls_f p ON p.payroll_id = a.payroll_id
+        where payroll_name = 'Civil Pensions Payroll'
+    `;
+    const db = await getConnection();
+    const result = await db.execute(sql);
+    console.log(result.rows)
 };
 
 
 module.exports = {
-    fetchPerson
+    fetchPerson,
 }
