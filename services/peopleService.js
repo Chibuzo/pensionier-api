@@ -55,6 +55,8 @@ const fetchPersonAssignement = async person_id => {
             a.SUPERVISOR_ID,
             a.ASSIGNMENT_TYPE,
             a.ASSIGNMENT_NUMBER,
+            decode (a.employment_category , 'PERMP', 'Permanent and Pensionable', 'CONP', 'Contract and Pensionable', 'CON', 'Contract',
+            'PEN', 'Pensioners', 'TEMP','Temporary'),
             a.EFFECTIVE_START_DATE,
             bg.TYPE business_group,
             pr.payroll_name,

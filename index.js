@@ -7,7 +7,7 @@ const { handleError, ErrorHandler } = require('./helpers/errorHandler');
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Welcome to my api!' });
+    res.status(200).json({ message: 'Welcome to Old Age Pension API' });
 });
 
 //app.use('/api', header_validation, apiRoutes);

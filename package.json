@@ -9,7 +9,7 @@
     "author": "Chibuzo Okolo",
     "license": "ISC",
     "dependencies": {
-        "axios": "^0.19.0",
+        "axios": "^0.19.2",
         "chai": "^4.2.0",
         "chai-http": "^4.3.0",
         "dotenv": "^8.2.0",
