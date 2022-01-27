@@ -55,8 +55,8 @@ const fetchPersonAssignement = async person_id => {
             a.SUPERVISOR_ID,
             a.ASSIGNMENT_TYPE,
             a.ASSIGNMENT_NUMBER,
-            decode (a.employment_category , 'PERMP', 'Permanent and Pensionable', 'CONP', 'Contract and Pensionable', 'CON', 'Contract',
-            'PEN', 'Pensioners', 'TEMP','Temporary'),
+            DECODE (a.employment_category , 'PERMP', 'Permanent and Pensionable', 'CONP', 'Contract and Pensionable', 'CON', 'Contract',
+            'PEN', 'Pensioners', 'TEMP','Temporary') EMPLOYMENT_CATEGORY,
             a.EFFECTIVE_START_DATE,
             bg.TYPE business_group,
             pr.payroll_name,
@@ -80,7 +80,7 @@ const fetchPersonAssignement = async person_id => {
     const db = await getConnection();
     const result = await db.execute(sql, [person_id]);
     const assignment = result.rows[0];
-    if (String(assignment.PAYROLL_NAME).toUpperCase() !== ('Civil Pensions Payroll').toUpperCase()) throw new ErrorHandler(400, 'Employee doesn\'t qualify for pension');
+    //if (String(assignment.PAYROLL_NAME).toUpperCase() !== ('Civil Pensions Payroll').toUpperCase()) throw new ErrorHandler(400, 'Employee doesn\'t qualify for pension');
     return assignment;
 }; // 130
 
