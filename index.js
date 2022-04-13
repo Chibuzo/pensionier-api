@@ -4,6 +4,9 @@ require('dotenv').config();
 const apiRoutes = require('./routes');
 const { handleError, ErrorHandler } = require('./helpers/errorHandler');
 
+// initialize DB
+require('./config/dbconnection');
+
 app.use(express.json());
 
 app.get('/', (req, res) => {
