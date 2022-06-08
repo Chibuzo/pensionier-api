@@ -38,6 +38,7 @@ const fetchPerson = async national_id => {
     const db = await getConnection();
     const result = await db.execute(sql, [national_id]);
     const person = result.rows[0];
+    await db.close();
     if (!person) throw new ErrorHandler(404, 'Person not found');
 
     const assignment = await fetchPersonAssignement(person.PERSON_ID);
@@ -81,6 +82,8 @@ const fetchPersonAssignement = async person_id => {
     const result = await db.execute(sql, [person_id]);
     const assignment = result.rows[0];
     //if (String(assignment.PAYROLL_NAME).toUpperCase() !== ('Civil Pensions Payroll').toUpperCase()) throw new ErrorHandler(400, 'Employee doesn\'t qualify for pension');
+
+    await db.close();
     return assignment;
 }; // 130
 
